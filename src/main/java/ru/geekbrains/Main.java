@@ -1,22 +1,22 @@
 package ru.geekbrains;
 
-
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 public class Main {
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
-        Cart cart = context.getBean(Cart.class);
-        ProductRepository repository = new ProductRepository();
-        repository.addProducts();
-        repository.printProductList();
-        cart.addProduct(repository.getProductById(6), 2);
-        cart.addProduct(repository.getProductById(10), 3);
-        System.out.println(cart.getCartMap());
-        System.out.println(cart.getAllProductSum());
-        cart.clearCartMap();
-        System.out.println(repository.getProductById(6));
-        System.out.println(repository.getProductById(10));
-        context.close();
+        SessionFactoryUtils sessionFactoryUtils = new SessionFactoryUtils();
+        sessionFactoryUtils.init();
+        try {
+            ProductDao productDao = new ProductDaoImpl(sessionFactoryUtils);
+            System.out.println(productDao.findById(1L));
+            System.out.println(productDao.findAll());
+            productDao.save(new Product("Apricot", 37));
+            productDao.deleteById(2L);
+            System.out.println(productDao.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sessionFactoryUtils.shutDown();
+        }
+
     }
+
 }

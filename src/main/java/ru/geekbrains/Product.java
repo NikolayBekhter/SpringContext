@@ -1,35 +1,40 @@
 package ru.geekbrains;
 
+import lombok.*;
+
+import javax.persistence.*;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "products")
 public class Product {
-    private int id;
-    private static int idCount = 1;
-    private String name;
-    private int price;
 
-    public Product (String name, int price) {
-        id = idCount++;
-        this.name = name;
-        this.price = price;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "cost")
+    private int cost;
+
+    public Product(String title, int cost) {
+        this.title = title;
+        this.cost = cost;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
+    public Product() {
     }
 
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
+                ", title='" + title + '\'' +
+                ", cost=" + cost +
                 '}';
     }
 }
