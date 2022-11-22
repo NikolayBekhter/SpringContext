@@ -1,4 +1,4 @@
-package ru.geekbrains;
+package ru.geekbrains.utils;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,10 +1,12 @@
-package ru.geekbrains;
+package ru.geekbrains.productDao;
 
 import org.hibernate.Session;
+import ru.geekbrains.model.Product;
+import ru.geekbrains.utils.SessionFactoryUtils;
 
 import java.util.List;
 
-public class ProductDaoImpl implements ProductDao{
+public class ProductDaoImpl implements ProductDao {
 
     SessionFactoryUtils sessionFactoryUtils;
 

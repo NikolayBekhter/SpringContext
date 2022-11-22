@@ -1,4 +1,6 @@
-package ru.geekbrains;
+package ru.geekbrains.productDao;
+
+import ru.geekbrains.model.Product;
 
 import java.util.List;
 

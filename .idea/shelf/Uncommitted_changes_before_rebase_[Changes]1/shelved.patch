@@ -1,0 +1,200 @@
+Index: src/main/java/ru/geekbrains/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.geekbrains;\r\n\r\n\r\nimport org.springframework.context.annotation.AnnotationConfigApplicationContext;\r\n\r\npublic class Main {\r\n    public static void main(String[] args) {\r\n        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);\r\n        Cart cart = context.getBean(Cart.class);\r\n        ProductRepository repository = new ProductRepository();\r\n        repository.addProducts();\r\n        repository.printProductList();\r\n        cart.addProduct(repository.getProductById(6), 2);\r\n        cart.addProduct(repository.getProductById(10), 3);\r\n        System.out.println(cart.getCartMap());\r\n        System.out.println(cart.getAllProductSum());\r\n        cart.clearCartMap();\r\n        System.out.println(repository.getProductById(6));\r\n        System.out.println(repository.getProductById(10));\r\n        context.close();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/geekbrains/Main.java b/src/main/java/ru/geekbrains/Main.java
+--- a/src/main/java/ru/geekbrains/Main.java	(revision a70f3d953560a7584110129ab213b3b6a101d32e)
++++ b/src/main/java/ru/geekbrains/Main.java	(date 1668880565878)
+@@ -1,22 +1,27 @@
+ package ru.geekbrains;
+ 
+-
+-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
++import ru.geekbrains.model.Product;
++import ru.geekbrains.productDao.ProductDao;
++import ru.geekbrains.productDao.ProductDaoImpl;
++import ru.geekbrains.utils.SessionFactoryUtils;
+ 
+ public class Main {
+     public static void main(String[] args) {
+-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+-        Cart cart = context.getBean(Cart.class);
+-        ProductRepository repository = new ProductRepository();
+-        repository.addProducts();
+-        repository.printProductList();
+-        cart.addProduct(repository.getProductById(6), 2);
+-        cart.addProduct(repository.getProductById(10), 3);
+-        System.out.println(cart.getCartMap());
+-        System.out.println(cart.getAllProductSum());
+-        cart.clearCartMap();
+-        System.out.println(repository.getProductById(6));
+-        System.out.println(repository.getProductById(10));
+-        context.close();
++        SessionFactoryUtils sessionFactoryUtils = new SessionFactoryUtils();
++        sessionFactoryUtils.init();
++        try {
++            ProductDao productDao = new ProductDaoImpl(sessionFactoryUtils);
++            System.out.println(productDao.findById(1L));
++            System.out.println(productDao.findAll());
++            productDao.save(new Product("Apricot", 37));
++            //productDao.deleteById(2L);
++            System.out.println(productDao.findAll());
++        } catch (Exception e) {
++            e.printStackTrace();
++        } finally {
++            sessionFactoryUtils.shutDown();
++        }
++
+     }
++
+ }
+\ No newline at end of file
+Index: src/main/java/ru/geekbrains/Product.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.geekbrains;\r\n\r\npublic class Product {\r\n    private int id;\r\n    private static int idCount = 1;\r\n    private String name;\r\n    private int price;\r\n\r\n    public Product (String name, int price) {\r\n        id = idCount++;\r\n        this.name = name;\r\n        this.price = price;\r\n    }\r\n\r\n    public int getId() {\r\n        return id;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public int getPrice() {\r\n        return price;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return \"Product{\" +\r\n                \"id=\" + id +\r\n                \", name='\" + name + '\\'' +\r\n                \", price=\" + price +\r\n                '}';\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/geekbrains/Product.java b/src/main/java/ru/geekbrains/Product.java
+--- a/src/main/java/ru/geekbrains/Product.java	(revision a70f3d953560a7584110129ab213b3b6a101d32e)
++++ b/src/main/java/ru/geekbrains/Product.java	(date 1668880565887)
+@@ -1,35 +1,0 @@
+-package ru.geekbrains;
+-
+-public class Product {
+-    private int id;
+-    private static int idCount = 1;
+-    private String name;
+-    private int price;
+-
+-    public Product (String name, int price) {
+-        id = idCount++;
+-        this.name = name;
+-        this.price = price;
+-    }
+-
+-    public int getId() {
+-        return id;
+-    }
+-
+-    public String getName() {
+-        return name;
+-    }
+-
+-    public int getPrice() {
+-        return price;
+-    }
+-
+-    @Override
+-    public String toString() {
+-        return "Product{" +
+-                "id=" + id +
+-                ", name='" + name + '\'' +
+-                ", price=" + price +
+-                '}';
+-    }
+-}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"a518452a-a6fb-4c2e-9e52-cbfe57c5672e\" name=\"Changes\" comment=\"master\">\r\n      <change afterPath=\"$PROJECT_DIR$/.gitignore\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/encodings.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/uiDesigner.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/vcs.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/ru/geekbrains/Cart.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/ru/geekbrains/Config.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/ru/geekbrains/Product.java\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/ru/geekbrains/ProductRepository.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/pom.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/pom.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/ru/geekbrains/Main.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/ru/geekbrains/Main.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"useMavenConfig\" value=\"true\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2HHAEibCKdUqSjvMKWqKbUXPQwt\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"ru.geekbrains.Main\" />\r\n      <module name=\"SpringContext\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"ru.geekbrains.Camera\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"a518452a-a6fb-4c2e-9e52-cbfe57c5672e\" name=\"Changes\" comment=\"\" />\r\n      <created>1667931531495</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1667931531495</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"master\">\r\n      <created>1668004818936</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1668004818936</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"master\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"master\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision a70f3d953560a7584110129ab213b3b6a101d32e)
++++ b/.idea/workspace.xml	(date 1668880565899)
+@@ -5,18 +5,9 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="a518452a-a6fb-4c2e-9e52-cbfe57c5672e" name="Changes" comment="master">
+-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Cart.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Config.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Product.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/ru/geekbrains/ProductRepository.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Main.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ru/geekbrains/Product.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -27,16 +18,33 @@
+     <option name="RECENT_TEMPLATES">
+       <list>
+         <option value="Class" />
++        <option value="Interface" />
+       </list>
+     </option>
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+       <map>
+-        <entry key="$PROJECT_DIR$" value="master" />
++        <entry key="$PROJECT_DIR$" value="lesson_5" />
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++  </component>
++  <component name="JpbToolWindowState">
++    <option name="myId2FirstActivated">
++      <map>
++        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
++        <entry key="com.haulmont.jpb.jpaPalette" value="true" />
++        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
++      </map>
++    </option>
++    <option name="myId2Visible">
++      <map>
++        <entry key="com.haulmont.jpb.jpaInspector" value="false" />
++        <entry key="com.haulmont.jpb.jpaPalette" value="false" />
++        <entry key="com.haulmont.jpb.jpaStructure" value="false" />
++      </map>
++    </option>
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -54,14 +62,16 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/nvbek/IdeaProjects/SpringContext&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;yiiguxing.plugin.translate&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RunManager">
+     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="ru.geekbrains.Main" />
+@@ -116,4 +126,8 @@
+     <MESSAGE value="master" />
+     <option name="LAST_COMMIT_MESSAGE" value="master" />
+   </component>
++  <component name="XSLT-Support.FileAssociations.UIState">
++    <expand />
++    <select />
++  </component>
+ </project>
+\ No newline at end of file
