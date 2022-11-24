@@ -1,8 +1,9 @@
-package ru.geekbrains;
+package ru.geekbrains.model;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,6 +21,9 @@ public class Product {
 
     @Column(name = "cost")
     private int cost;
+
+    @OneToMany(mappedBy = "product")
+    List<Order> orders;
 
     public Product(String title, int cost) {
         this.title = title;
